@@ -43,7 +43,7 @@
                                         <%= index + 1 %>
                                     </td>
                                     <td class="p-3 text-[#0E6EB8]">
-                                        <a href="http://localhost:4000/url/<%= url.shortId %>">
+                                        <a href="http://localhost:<%= process.env.PORT %>/url/<%= url.shortId %>">
                                             <%= url.shortId %>
                                         </a>
 
