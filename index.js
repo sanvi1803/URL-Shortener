@@ -2,12 +2,16 @@ require('dotenv').config();
 const express = require('express')
 const app = express()
 const path = require('path')
-const ejs = require('ejs')
+const cookieParser = require('cookie-parser')
+const port = process.env.PORT || 3000;
+const URL = require('./models/url.model')
+
+const { restrictToLoggedInUsersOnly, checkAuth } = require('./middlewares/auth')
+const { connectToMongoDB } = require('./connect')
+
 const urlRoute = require('./routes/url')
 const staticRoute = require('./routes/staticroute')
-const URL = require('./models/url.model')
-const { connectToMongoDB } = require('./connect')
-const port = process.env.PORT || 3000;
+const userRoute = require('./routes/user')
 
 connectToMongoDB('mongodb://127.0.0.1:27017/short-url')
     .then((result) => {
@@ -17,12 +21,17 @@ connectToMongoDB('mongodb://127.0.0.1:27017/short-url')
         console.log(err, "Not connected to MongoDB");
 
     });
-app.use(express.json());
+
 app.set("view engine", "ejs")
 app.set("views", path.resolve("./views"))
+
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }))
-app.use('/url', urlRoute);
-app.use('/', staticRoute)
+app.use(cookieParser());
+
+app.use('/url', restrictToLoggedInUsersOnly, urlRoute); //means that only loggedin user cna register
+app.use('/', checkAuth, staticRoute);
+app.use('/user', userRoute);
 //create unique id
 app.get('/url/:shortId', async (req, res) => {
     const shortId = req.params.shortId;

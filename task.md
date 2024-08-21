@@ -13,4 +13,6 @@ Also, keep track of total visits/clicks on the URL.
 - GET /URL/analytics/:id - Returns the clicks for the provided short id.
 
 In controllers we write functions that need to go inside the route function i.e after say router.post('/',function)
-firstly create schema/ model in models-> create route -> create controller function -> install short id ->create model ->expotr everyhting insde index.js -> make mongodb connection inside connect.js
+firstly create schema/ model in models-> create route -> create controller function -> install short id ->create model ->expotr everyhting insde index.js -> make mongodb connection inside connect.js -> now we'll add authentication -> create user model
+
+user.js -> will have route for user login signup
